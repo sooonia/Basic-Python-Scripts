@@ -1,9 +1,7 @@
 #Sonia Kopel
 #hangman.py
-#I certify that this is entirely my own work
-#This program uses a graphical user interface to play hangman
-#inputs: random letters
-#outputs: word reveal, hangman guy, prompts
+#inputs: letters specified by user
+#outputs: word reveal, hangman figure, prompts
 
 import random
 from graphics import *
@@ -99,7 +97,7 @@ def userInterface():
     width=400
     height=550
     win=GraphWin("Hangman",width,height)
-    win.setBackground("lightblue")
+    win.setBackground("lightsteelblue")
     
     #Gallows
     base = Line(Point(width/3,height/2),Point(2*width/3,height/2))
@@ -116,7 +114,7 @@ def userInterface():
     pole3.setWidth(2)
     pole3.draw(win)
 
-    #Dude
+    #Man
     head=Circle(Point(7*width/15,5*height/24-10),10)
     head.setFill("black")
     neck=Line(Point(7*width/15,5*height/24-10),Point(7*width/15,5*height/24+10))
@@ -127,7 +125,7 @@ def userInterface():
     lLeg=Line(Point(7*width/15-30,5*height/24+90),Point(7*width/15,5*height/24+50))
 
     button=Rectangle(Point(width/2-30,2*height/3+40),Point(width/2+30,2*height/3+65))
-    button.setFill("pink")
+    button.setFill("aliceblue")
     buttonText=Text(button.getCenter(),"Guess")
     button.draw(win)
     buttonText.draw(win)
@@ -155,13 +153,14 @@ def userInterface():
     otherText.draw(win)
     
 
-    while numGuesses > 1 and not finished(secretWord,guessedWord):
+    while numGuesses >= 1 and not finished(secretWord,guessedWord):
         if letterGuessed(guess,lettersGuessed):
             otherText.setText("Letter already guessed")
             guessLetter = Entry(Point(width/2,height/2+105),1)
             guessLetter.draw(win)
             win.getMouse()
             guess=guessLetter.getText()
+            otherText.setText("")
         elif letterFound(guess,secretWord):
             guessedWord=guessWord(guess,secretWord,guessedWord)
             guessText.setText(guessedWord)
@@ -181,21 +180,34 @@ def userInterface():
             lettersGuessed.append(guess)
             if numGuesses == 6:
                 head.draw(win)
-            if numGuesses == 5:
+            elif numGuesses == 5:
                 neck.draw(win)
-            if numGuesses == 4:
+            elif numGuesses == 4:
                 body.draw(win)
-            if numGuesses == 3:
+            elif numGuesses == 3:
                 rArm.draw(win)
-            if numGuesses == 2:
+            elif numGuesses == 2:
                 lArm.draw(win)
-            if numGuesses == 1:
+            elif numGuesses == 1:
                 rLeg.draw(win)
-            guessLetter = Entry(Point(width/2,height/2+105),1)
-            guessLetter.draw(win)
-            win.getMouse()
-            guess=guessLetter.getText()
-        
-    lLeg.draw(win)
-    otherText.setText("You Lose; the word was " + secretWord)
+            if numGuesses == 0:   
+                lLeg.draw(win)
+                otherText.setText("You Lose; the word was " + secretWord)
+            else:
+                guessLetter = Entry(Point(width/2,height/2+105),1)
+                guessLetter.draw(win)
+                win.getMouse()
+                guess=guessLetter.getText()
+
+
+    if numGuesses>0:
+        otherText.setText("You win!!!!")
+    
+    txtPt= Point(width/2,height-10)
+    closeText=Text(txtPt,"Click to Close")
+    closeText.setTextColor("black")
+    closeText.draw(win)
+    win.getMouse()
+    win.close()    
+    
 userInterface()
